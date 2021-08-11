@@ -19,9 +19,13 @@ Example Output
 
 vec!["Open", "Senior", "Open", "Senior"]
 */
-fn open_or_senior(data: Vec<(i32, i32)>) -> Vec<String> {
+
+//Aunque en la definición del problema en codewars aparecía data: Vec, he realizado las modificaciones
+//oportunas para no "apropiar" el vector por parte de la función con data: &Vec
+//se han utilizado los dereferenciadores (*) donde ha sido necesario.
+fn open_or_senior(data: &Vec<(i32, i32)>) -> Vec<String> {
   let mut result = Vec::<String>::new();
-  for jugador in &data{
+  for jugador in data{
       if jugador.0 < 55 {
           result.push("Open".to_string());
       }else if jugador.1 > 7{
@@ -33,7 +37,7 @@ fn open_or_senior(data: Vec<(i32, i32)>) -> Vec<String> {
     result
 }
 
-fn open_or_senior2(data: Vec<(i32,i32)>) -> Vec<String>{
+fn open_or_senior2(data: &Vec<(i32,i32)>) -> Vec<String>{
     const EDAD_SENIOR:i32 = 55;
     const HANDICAP_MINIMO: i32 = 8;
 
@@ -42,7 +46,7 @@ fn open_or_senior2(data: Vec<(i32,i32)>) -> Vec<String>{
 
     data.into_iter()
     .map(|(edad, handicap)| {
-        if edad >= EDAD_SENIOR && handicap >= HANDICAP_MINIMO {
+        if *edad >= EDAD_SENIOR && *handicap >= HANDICAP_MINIMO {
             SENIOR
         }else {
             OPEN
@@ -51,7 +55,25 @@ fn open_or_senior2(data: Vec<(i32,i32)>) -> Vec<String>{
     .map(String::from)
     .collect::<Vec<String>>()
 }
+
+fn open_or_senior3(data: &Vec<(i32, i32)>) -> Vec<String>{
+    const EDAD_SENIOR:i32 = 55;
+    const HANDICAP_MINIMO: i32 = 8;
+
+    const SENIOR:&str= "Senior";
+    const OPEN:&str = "Open";
+    data.iter()
+    .map(|&(x,y)| match (x> EDAD_SENIOR, y >= HANDICAP_MINIMO) {
+        (true, true) => SENIOR,
+        _ => OPEN
+    })
+    .map(String::from)
+    .collect()
+}
 fn main(){
     let jugadores = vec![(45, 12), (55,21), (19, -2), (55, 6)];
-    println!("{:?}", open_or_senior2(jugadores));
+    println!("{:?}", open_or_senior3(&jugadores));
+    //Sin el cambio &Vec la siguiente línea no permitiría compilar.
+    //Realiza la prueba y explica el porqué
+    println!("{:?}", jugadores);
 }
