@@ -26,6 +26,22 @@ fn spin_words(words: &str) -> String {
      //Convertimos el Vec de String a un String con el método join
     result.join(" ")
 }
+//Mucho más interesante esta otra ¡¡Dónde va a parar!!
+fn spin_words2(words: &str) -> String {
+    const LONG_MAX:usize = 5;
+    words.split_whitespace()
+    .into_iter()
+    .map(|c| {
+        if c.len() > LONG_MAX {
+            c.chars().rev().collect::<String>()
+        }else {
+            c.to_string()
+        }
+    })
+    .collect::<Vec<String>>()
+    .join(" ")
+
+}
 
 fn main(){
     let cadena = "hola mundo traidor";
